@@ -250,19 +250,25 @@ async function startServer() {
     console.log('MongoDB connected successfully');
 
     if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
-      const email = process.env.ADMIN_EMAIL.toLowerCase().trim();
-      const exists = await Admin.findOne({ email });
+  const email = process.env.ADMIN_EMAIL.toLowerCase().trim();
 
-      if (!exists) {
-        const passwordHash = await bcrypt.hash(
-          process.env.ADMIN_PASSWORD,
-          12
-        );
+  const passwordHash = await bcrypt.hash(
+    process.env.ADMIN_PASSWORD,
+    12
+  );
 
-        await Admin.create({ email, passwordHash });
-        console.log(`Admin account created: ${email}`);
-      }
-    }
+  await Admin.findOneAndUpdate(
+    { email },
+    {
+      email,
+      passwordHash,
+      role: 'admin'
+    },
+    { upsert: true, new: true }
+  );
+
+  console.log(`Admin account password synchronized: ${email}`);
+}
 
     const port = process.env.PORT || 5000;
 
