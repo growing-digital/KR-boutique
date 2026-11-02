@@ -1,0 +1,9 @@
+(
+echo node_modules/
+echo **/node_modules/
+echo dist/
+echo **/dist/
+echo .env
+echo .env.*
+echo !.env.example
+) > .gitignore
