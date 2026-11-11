@@ -194,7 +194,26 @@ function ProductCard({ product, addToCart, wishlist, setWishlist }) {
 
 /* ---------------- Home Page ---------------- */
 
+
 function HomePage({ products, addToCart, wishlist, setWishlist }) {
+  useEffect(() => {
+    document.title = "Saree Shop in Tirunelveli | KR Boutique";
+
+    let description = document.querySelector(
+      'meta[name="description"]'
+    );
+
+    if (!description) {
+      description = document.createElement("meta");
+      description.name = "description";
+      document.head.appendChild(description);
+    }
+
+    description.content =
+      "Looking for a saree shop in Tirunelveli? Explore elegant silk sarees, festive wear, wedding collections and women's fashion at KR Boutique.";
+
+  }, []);
+
   return (
     <main>
       <section className="hero">
@@ -202,14 +221,15 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
           <p className="eyebrow">THE NEW SEASON EDIT</p>
 
           <h1>
-            Elegance in
+            Saree Shop in
             <br />
-            <em>Every Thread.</em>
+            <em>Tirunelveli.</em>
           </h1>
 
           <p className="hero-description">
-            Discover timeless sarees, festive favourites and carefully chosen
-            styles for every beautiful occasion.
+            Discover elegant silk sarees, festive favourites,
+            wedding collections and beautiful women's fashion
+            at KR Boutique, Tirunelveli.
           </p>
 
           <Link to="/shop" className="primary-button">
@@ -220,10 +240,42 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
         <div className="hero-image">
           <img
             src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200"
-            alt="Traditional Indian saree"
+            alt="Traditional Indian saree collection at KR Boutique"
           />
-          <span className="hero-image-label">Timeless Indian elegance</span>
+          <span className="hero-image-label">
+            Timeless Indian elegance
+          </span>
         </div>
+      </section>
+
+      {/* Local SEO content */}
+      <section className="section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">WELCOME TO KR BOUTIQUE</p>
+            <h2>Discover Beautiful Sarees in Tirunelveli</h2>
+          </div>
+        </div>
+
+        <p>
+          Welcome to KR Boutique, your destination for elegant
+          sarees and women's fashion in Tirunelveli, Tamil Nadu.
+          Explore our collections of pure silk sarees, festive
+          wear, wedding collections and stylish outfits for
+          special occasions.
+        </p>
+
+        <p>
+          Whether you are looking for a beautiful saree for a
+          wedding, festival or family celebration, discover
+          fashion that combines traditional elegance with
+          contemporary style.
+        </p>
+
+        <p>
+          Visit KR Boutique at Thilak Nagar, Tirunelveli Town,
+          and explore our latest collections.
+        </p>
       </section>
 
       <section className="section">
@@ -257,9 +309,9 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
           <h2>Tradition, with a touch of today.</h2>
 
           <p>
-            At KR Boutique, we celebrate the beauty of Indian fashion—from the
-            richness of pure silk sarees to the charm of festive and everyday
-            styles.
+            At KR Boutique, we celebrate the beauty of Indian
+            fashion—from the richness of pure silk sarees to
+            the charm of festive and everyday styles.
           </p>
 
           <Link to="/story" className="text-link">
@@ -269,7 +321,7 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
 
         <img
           src="https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=1000"
-          alt="Indian traditional fashion"
+          alt="Traditional Indian women's festive fashion"
           loading="lazy"
         />
       </section>
@@ -284,6 +336,7 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
     </main>
   );
 }
+
 
 /* ---------------- Shop Page ---------------- */
 
