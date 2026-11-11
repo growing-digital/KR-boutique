@@ -249,26 +249,30 @@ async function startServer() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB connected successfully');
 
-    if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    
+if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
   const email = process.env.ADMIN_EMAIL.toLowerCase().trim();
 
-  const passwordHash = await bcrypt.hash(
-    process.env.ADMIN_PASSWORD,
-    12
-  );
+  const existingAdmin = await Admin.findOne({ email });
 
-  await Admin.findOneAndUpdate(
-    { email },
-    {
+  if (!existingAdmin) {
+    const passwordHash = await bcrypt.hash(
+      process.env.ADMIN_PASSWORD,
+      12
+    );
+
+    await Admin.create({
       email,
       passwordHash,
       role: 'admin'
-    },
-    { upsert: true, new: true }
-  );
+    });
 
-  console.log(`Admin account password synchronized: ${email}`);
+    console.log(`Admin account created: ${email}`);
+  } else {
+    console.log('Existing admin account retained. Password unchanged.');
+  }
 }
+
 
     const port = process.env.PORT || 5000;
 
