@@ -28,46 +28,6 @@ import "./style.css";
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const WA = import.meta.env.VITE_WHATSAPP_NUMBER || "919384129263";
 
-const fallback = [
-  {
-    _id: "sample-1",
-    name: "Classic Pure Silk Saree",
-    category: "Pure Silk Sarees",
-    price: 4899,
-    image:
-      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900",
-    description:
-      "A timeless silk drape for celebrations and special occasions.",
-  },
-  {
-    _id: "sample-2",
-    name: "Festive Anarkali Set",
-    category: "Festive Wear",
-    price: 2799,
-    image:
-      "https://images.unsplash.com/photo-1583391733956-6c78276477e3?w=900",
-    description: "Elegant festive styling with a graceful silhouette.",
-  },
-  {
-    _id: "sample-3",
-    name: "Everyday Elegance",
-    category: "Women's Fashion",
-    price: 1499,
-    image:
-      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=900",
-    description: "Comfortable style for everyday moments.",
-  },
-  {
-    _id: "sample-4",
-    name: "Wedding Edit Saree",
-    category: "Wedding Collection",
-    price: 6999,
-    image:
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=900",
-    description: "A statement piece for memorable occasions.",
-  },
-];
-
 const categories = [
   "All",
   "Pure Silk Sarees",
@@ -81,7 +41,7 @@ const money = (amount) =>
   `₹${Number(amount || 0).toLocaleString("en-IN")}`;
 
 const imageOf = (product) =>
-  product.image || product.images?.[0] || fallback[0].image;
+  product.image || product.images?.[0] || "";
 
 /* ---------------- Shared Layout ---------------- */
 
@@ -290,17 +250,24 @@ function HomePage({ products, addToCart, wishlist, setWishlist }) {
           </Link>
         </div>
 
-        <div className="products-grid">
-          {products.slice(0, 4).map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              addToCart={addToCart}
-              wishlist={wishlist}
-              setWishlist={setWishlist}
-            />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="products-grid">
+            {products.slice(0, 4).map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                addToCart={addToCart}
+                wishlist={wishlist}
+                setWishlist={setWishlist}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state">
+            <h2>New collections coming soon</h2>
+            <p>Please check back soon for the latest styles from KR Boutique.</p>
+          </div>
+        )}
       </section>
 
       <section className="home-story">
@@ -694,21 +661,33 @@ function CartPage({ cart, setCart }) {
 /* ---------------- Main App ---------------- */
 
 function AppContent() {
-  const [products, setProducts] = useState(fallback);
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     fetch(`${API}/products`)
-      .then((response) => (response.ok ? response.json() : []))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to load products");
+        }
+        return response.json();
+      })
       .then((data) => {
-        if (Array.isArray(data) && data.length) {
+        if (isMounted && Array.isArray(data)) {
           setProducts(data);
         }
       })
-      .catch(() => {
-        console.warn("Using demo products because API is unavailable.");
+      .catch((error) => {
+        console.error("Unable to load products from the store:", error);
+        if (isMounted) setProducts([]);
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const addToCart = (product) => {
