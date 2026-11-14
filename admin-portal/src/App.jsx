@@ -250,6 +250,15 @@ export default function App() {
             <span className="nav-icon">＋</span>
             Add product
           </button>
+
+          <button
+            className="nav-item mobile-logout-item"
+            onClick={logout}
+            type="button"
+          >
+            <span className="nav-icon">↗</span>
+            Sign out
+          </button>
         </nav>
 
         <div className="sidebar-bottom">

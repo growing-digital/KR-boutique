@@ -847,3 +847,21 @@ textarea:focus {
     padding: 28px;
   }
 }
+
+/* Sign out is shown in the navigation on mobile only. */
+.mobile-logout-item {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .mobile-logout-item {
+    display: flex;
+    color: var(--burgundy);
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+
+  .mobile-logout-item:hover {
+    background: var(--burgundy-light);
+  }
+}
